@@ -83,7 +83,7 @@ export default function App() {
           name="CityBanner"
           component={CityBaner}
           options={() => ({
-            title: 'Банеры города'
+            title: 'Баннеры города'
           })}
         />
 

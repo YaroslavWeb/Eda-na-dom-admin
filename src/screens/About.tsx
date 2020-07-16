@@ -16,11 +16,19 @@ export const About: React.FC = () => {
     <ScrollView style={styles.container}>
       <Text style={globalStyles.textMedium}>Версии приложения</Text>
       <View style={globalStyles.hr} />
-      <Text>1.0.0</Text>
-      <Text>- Добавление, удаление города</Text>
-      <Text>- Добавление, удаление, изменение доставки</Text>
-      <Text>- Добавление, удаление, изменение категории</Text>
-      <Text>- Формирование банеров для города</Text>
+      <View style={{marginTop:5}}>
+        <Text>v1.1.0</Text>
+        <Text>- Доработка сортировки</Text>
+        <Text>- Изменение функционала с учётом рейтинга доставок</Text>
+      </View>
+      <View style={{marginTop:5}}>
+        <Text>v1.0.0</Text>
+        <Text>- Добавление, удаление города</Text>
+        <Text>- Добавление, удаление, изменение доставки</Text>
+        <Text>- Добавление, удаление, изменение категории</Text>
+        <Text>- Формирование банеров для города</Text>
+      </View>
+
       <View style={globalStyles.hr} />
 
       <Text style={globalStyles.textMedium}>Разработчик: Татаринов Я.А.</Text>

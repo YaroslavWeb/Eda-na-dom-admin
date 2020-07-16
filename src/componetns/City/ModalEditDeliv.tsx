@@ -355,7 +355,7 @@ export const ModalEditDeliv: React.FC<ModalEditCityProps> = ({
           </View>
 
           <View style={[styles.field]}>
-            <Text style={globalStyles.textSmall}>Банеры</Text>
+            <Text style={globalStyles.textSmall}>Баннеры</Text>
             <BanersPicker baners={inputsValue.baners} setInputsValue={setInputsValue} />
           </View>
           <View style={styles.field}>

@@ -92,6 +92,9 @@ export const ModalAddDeliv: React.FC<ModalAddCityProps> = ({
     else if(!inputsValue.timeOpen.trim() && !inputsValue.timeClose.trim()){
       alert("Время открытия или закрытия не может быть пустым.");
     }
+    else if(!inputsValue.logo.trim()){
+      alert('Добавте логотип доставке.')
+    }
     else if(!inputsValue.delivFree.trim()){
       alert("Стоимость бесплатной доставки не может быть пустой.");
     }
@@ -331,7 +334,7 @@ export const ModalAddDeliv: React.FC<ModalAddCityProps> = ({
           </View>
 
           <View style={[styles.field]}>
-            <Text style={globalStyles.textSmall}>Банеры</Text>
+            <Text style={globalStyles.textSmall}>Баннеры</Text>
             <BanersPicker baners={inputsValue.baners} setInputsValue={setInputsValue} />
           </View>
         </ScrollView>

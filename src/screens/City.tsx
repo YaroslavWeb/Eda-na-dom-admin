@@ -19,20 +19,29 @@ interface CityProps {
 }
 
 export const City: React.FC<CityProps> = ({ route }) => {
+  // данные из firebase
   const [categoriesFB, setCategoriesFB] = React.useState<ICategory[]>([]);
+  
+  // Все доставки по городу
   const [deliveriesFB, setDeliveriesFB] = React.useState<IDelivery[]>([]);
-
+  
+  // Локальные данные
   const [categories, setCategories] = React.useState<ICategory[]>([]);
+  // видимые доставки
   const [deliveries, setDeliveries] = React.useState<IDelivery[]>([]);
+
+  // фильтры для отображения
   const [filters, setFilters] = React.useState({
     activeCategoryId: null,
   });
 
+  // получение данных из firebase
   React.useEffect(() => {
     getDeliveriesFB(setDeliveriesFB, route.params.id);
     getCategoriesFB(setCategoriesFB)
   }, []);
 
+  // Обновление локальных данных по изменению базы данны
   React.useEffect(() => {
     let categoriesListID: string[] = [];
     let categoriesList: ICategory[] = [];
@@ -51,7 +60,6 @@ export const City: React.FC<CityProps> = ({ route }) => {
       });
       return categoriesList;
     });
-    // setFilters(prev => ({ ...prev, activeCategoryId: categoriesListID[0] }))
 
     setDeliveries(() => {
       let deliveriesList: IDelivery[] = [];
@@ -61,16 +69,39 @@ export const City: React.FC<CityProps> = ({ route }) => {
         }
       });
       deliveriesList.sort((a, b) => {
-        let indexA:number, indexB:number
-        a.place.forEach(item=> {if(item.categoryID === filters.activeCategoryId) indexA = item.categoryID.indexOf(filters.activeCategoryId)});
-        b.place.forEach(item=> {if(item.categoryID === filters.activeCategoryId) indexB = item.categoryID.indexOf(filters.activeCategoryId)});
-        return a.place[indexA].point - b.place[indexB].point;
-      });
+        let indexA: number, indexB: number
+        indexA = a.place.findIndex((item: any) => item.categoryID === filters.activeCategoryId);
+        indexB = b.place.findIndex((item: any) => item.categoryID === filters.activeCategoryId);
+
+        if (a.place[indexA].point < 4 && b.place[indexB].point < 4) {
+          // Обе доставки входят в топ 3, сортируем их по месту
+          return a.place[indexA].point - b.place[indexB].point
+        }
+        else if (a.place[indexA].point < 4 && b.place[indexB].point >= 4) {
+          return -1
+        }
+        else if (a.place[indexA].point >= 4 && b.place[indexB].point < 4) {
+          return 1
+        }
+        else {
+          // Обе доставки не топ 3, соритруем по весу.
+          const coefficient = (point: number) => {
+            if(point <= 1) return 0.2 * Number(point)
+            if(point <= 2) return 0.4 * Number(point)
+            if(point <= 3) return 0.6 * Number(point)
+            if(point <= 4) return 0.8 * Number(point)
+            return point
+          }
+          const w1 = Number(a.rating.votes) * coefficient(a.rating.points)
+          const w2 = Number(b.rating.votes) * coefficient(b.rating.points)
+          return w2 - w1
+        }
+      })
       return deliveriesList;
     });
   }, [categoriesFB, deliveriesFB]);
 
-
+  // Обновление список доставок
   React.useEffect(() => {
     setDeliveries(() => {
       let deliveriesList: IDelivery[] = [];
@@ -80,19 +111,43 @@ export const City: React.FC<CityProps> = ({ route }) => {
         }
       });
       deliveriesList.sort((a, b) => {
-        let indexA:number, indexB:number
-        a.place.forEach(item=> {if(item.categoryID === filters.activeCategoryId) indexA = item.categoryID.indexOf(filters.activeCategoryId)});
-        b.place.forEach(item=> {if(item.categoryID === filters.activeCategoryId) indexB = item.categoryID.indexOf(filters.activeCategoryId)});
-        return a.place[indexA].point - b.place[indexB].point;
-      });
-      return deliveriesList;
+        let indexA: number, indexB: number
+        indexA = a.place.findIndex((item: any) => item.categoryID === filters.activeCategoryId);
+        indexB = b.place.findIndex((item: any) => item.categoryID === filters.activeCategoryId);
+
+        if (a.place[indexA].point < 4 && b.place[indexB].point < 4) {
+          // Обе доставки входят в топ 3, сортируем их по месту
+          return a.place[indexA].point - b.place[indexB].point
+        }
+        else if (a.place[indexA].point < 4 && b.place[indexB].point >= 4) {
+          return -1
+        }
+        else if (a.place[indexA].point >= 4 && b.place[indexB].point < 4) {
+          return 1
+        }
+        else {
+          // Обе доставки не топ 3, соритруем по весу.
+          const coefficient = (point: number) => {
+            if(point <= 1) return 0.2 * Number(point)
+            if(point <= 2) return 0.4 * Number(point)
+            if(point <= 3) return 0.6 * Number(point)
+            if(point <= 4) return 0.8 * Number(point)
+            return point
+          }
+          const w1 = Number(a.rating.votes) * coefficient(a.rating.points)
+          const w2 = Number(b.rating.votes) * coefficient(b.rating.points)
+          return w2 - w1
+        }
+      })
+      return deliveriesList
     });
   }, [filters.activeCategoryId]);
 
-
+  // Модальное окно на добавление доставки
   const [addModalVisible, setAddModalVisible] = React.useState(false);
   const toggleModal = () => setAddModalVisible((prev) => !prev);
 
+  // Перетягивание в драг листе
   const dragDeliveries = (data: IDelivery[]) => {
     data.forEach((delivery, index) => {
       if (index === 0) {
@@ -151,6 +206,7 @@ export const City: React.FC<CityProps> = ({ route }) => {
       categoryID: item,
       point: 4,
     }));
+    data.rating = {points:0, votes: 0}
     data.place.sort()
     addDeliveryFB(setDeliveriesFB, data);
   };

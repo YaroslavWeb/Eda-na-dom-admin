@@ -17,10 +17,10 @@ export const CityBaner: React.FC<CityBanerProps> = ({ route }) => {
   }, [])
   const [activeBaners, setActiveBaners] = React.useState<{deliveryID: string, uri: string}[]>([])
 
-  const addBaner = (deliveryID: string, uri: string) => {
+  const addBaner = (deliveryID: string, uri: string, deliveryName: string) => {
     setActiveBaners(prev => [
       ...prev,
-      { deliveryID, uri }
+      { deliveryID, uri, deliveryName }
     ])
   }
 
@@ -45,7 +45,7 @@ export const CityBaner: React.FC<CityBanerProps> = ({ route }) => {
                 return (
                   <TouchableOpacity
                     style={activeBaners.some(item => item.uri === baner) ? styles.itemActive : styles.item}
-                    onPress={() => { activeBaners.some(item => item.uri === baner) ? removeBaner(baner) : addBaner(delivery.id, baner) }}
+                    onPress={() => { activeBaners.some(item => item.uri === baner) ? removeBaner(baner) : addBaner(delivery.id, baner, delivery.name) }}
                     key={'baner_' + jndex + '_' + delivery.id}
                   >
                     <Image source={{ uri: baner }} style={styles.imgBaner} />

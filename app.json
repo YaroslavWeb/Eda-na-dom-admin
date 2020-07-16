@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "EdaNaDom_Admin",
+    "name": "Еда на дом Админка",
     "slug": "EdaNaDom_Admin",
     "platforms": [
       "ios",
@@ -20,7 +20,12 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "ru.yaroslavweb.endAdmin",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "ru.yaroslavweb.endAdmin",
+      "versionCode": 1
     }
   }
 }

@@ -76,7 +76,7 @@ export const updateBanersCityFB = (
     .doc(city.id)
     .set({ name: city.name, baners })
     .then(() => {
-      alert("Банеры сохранены.");
+      alert("Баннеры сохранены.");
     })
     .catch((err) => {
       alert(err);
